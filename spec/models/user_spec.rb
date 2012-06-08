@@ -2,11 +2,14 @@
 #
 # Table name: users
 #
-#  id         :integer         not null, primary key
-#  name       :string(255)
-#  email      :string(255)
-#  created_at :datetime        not null
-#  updated_at :datetime        not null
+#  id              :integer         not null, primary key
+#  name            :string(255)
+#  email           :string(255)
+#  created_at      :datetime        not null
+#  updated_at      :datetime        not null
+#  password_digest :string(255)
+#  remember_token  :string(255)
+#  admin           :boolean         default(FALSE)
 #
 
 require 'spec_helper'
@@ -128,5 +131,13 @@ describe User do
   describe "remember token" do
     before {@user.save}
     its(:remember_token) {should_not be_blank}
+  end
+
+  describe "accessible attributes" do
+    it "should not allow access to admin" do
+      expect do
+        admin = User.new(admin: true)
+      end.should raise_error(ActiveModel::MassAssignmentSecurity::Error)
+    end
   end
 end
